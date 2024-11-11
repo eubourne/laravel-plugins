@@ -1,0 +1,30 @@
+{
+  "name": "eubourne/laravel-plugins",
+  "description": "Module support for Laravel projects for better code organization.",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [ "laravel" ],
+  "authors": [
+    {
+      "name": "Eugene Bourne",
+      "email": "bourne.eugene@gmail.com"
+    }
+  ],
+  "require": {
+    "laravel/framework": "^11",
+    "php": "^8.3",
+    "psr/log": "^1.0|^2.0|^3.0"
+  },
+  "autoload": {
+    "psr-4": { "EuBourne\\LaravelPlugins\\": "src/" }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "EuBourne\\LaravelPlugins\\PluginServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
