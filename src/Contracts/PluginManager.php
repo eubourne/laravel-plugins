@@ -2,8 +2,6 @@
 
 namespace EuBourne\LaravelPlugins\Contracts;
 
-use Illuminate\Support\Collection;
-
 interface PluginManager
 {
     /**

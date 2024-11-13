@@ -2,7 +2,6 @@
 
 namespace EuBourne\LaravelPlugins;
 
-use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
 abstract class BaseServiceProvider extends ServiceProvider
