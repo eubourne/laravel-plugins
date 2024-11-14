@@ -44,7 +44,9 @@ class PluginLoader implements PluginLoaderContract
                      */
                     $plugin = new $className($this->getPluginConfig());
 
-                    $files->push($plugin->toArray());
+                    if ($plugin instanceof Plugin) {
+                        $files->push($plugin->toArray());
+                    }
                 }
             }
         }
