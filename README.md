@@ -45,6 +45,24 @@ php artisan vendor:publish --provider="EuBourne\LaravelPlugins\PluginServiceProv
 ```
 It will create `config/plugins.php` file with reasonable defaults.
 
+Instruct composer autoload in `composer.json` where to look for your module files:
+```php
+"autoload": {
+    "psr-4": {
+        "Modules\\": "modules/",
+    }
+}
+```
+> **NOTE:**
+>
+> The path should match the value specified in the `groups.*.path` section of your `config/plugins.php` file. If you have
+> multiple groups, you need to add a separate `psr-4` entry in `package.json` for each group.
+
+After updating the `composer.json`, run:
+```bash
+composer dump-autoload
+```
+
 ## Basic Usage
 
 ### Creating a Module
