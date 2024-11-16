@@ -137,9 +137,75 @@ class PluginManager implements PluginManagerContract
     /**
      * Returns a list of discovered plugins with all the metadata
      *
+     * @param string|null $fullKey
      * @return array
      */
-    public function getPluginData(): array
+    public function getPluginData(string $fullKey = null): array
+    {
+        // Get the list of all discovered plugins
+        $plugins = $this->getCachedPluginData() ??
+            $this->discoverPlugins()->all();
+
+        // Get a specific plugin if it was requested
+        if ($fullKey) {
+            if ($pluginData = Arr::get($plugins, $fullKey)) {
+                return $pluginData;
+            }
+
+            throw new \InvalidArgumentException('Plugin "' . $fullKey . '" was not found.');
+        }
+
+        // Otherwise, return the full list
+        return $plugins;
+    }
+
+    /**
+     * Return a list of discovered plugin keys.
+     *
+     * @return array
+     */
+    public function getKeys(): array
+    {
+        return array_keys($this->getPluginData());
+    }
+
+    /**
+     * Retrieve plugin data field from a specified plugin using dot notation.
+     *
+     * @param string $fullKey
+     * @param string $key
+     * @param mixed|null $default
+     * @return mixed
+     */
+    public function getFromPlugin(string $fullKey, string $key, mixed $default = null): mixed
+    {
+        $pluginData = $this->getPluginData($fullKey);
+        return Arr::get($pluginData, $key, $default);
+    }
+
+    /**
+     * Return instance of a plugin descriptor class
+     *
+     * @param string $fullKey
+     * @return Plugin
+     */
+    public function getPlugin(string $fullKey): Plugin
+    {
+        $class = $this->getFromPlugin($fullKey, 'className');
+
+        if (class_exists($class)) {
+            return new $class();
+        }
+
+        throw new \InvalidArgumentException('Plugin class "' . $class . '" was not found.');
+    }
+
+    /**
+     * Get plugin data stored in cache
+     *
+     * @return array|null
+     */
+    protected function getCachedPluginData(): ?array
     {
         try {
             $cached = $this->cache->get(static::CACHE_KEY);
@@ -150,7 +216,7 @@ class PluginManager implements PluginManagerContract
         } catch (InvalidArgumentException $e) {
         }
 
-        return $this->discoverPlugins()->all();
+        return null;
     }
 
     /**
