@@ -5,6 +5,7 @@ namespace EuBourne\LaravelPlugins;
 use EuBourne\LaravelPlugins\Console\PluginCacheCommand;
 use EuBourne\LaravelPlugins\Console\PluginClearCommand;
 use EuBourne\LaravelPlugins\Console\PluginCommand;
+use EuBourne\LaravelPlugins\Console\PluginInstallCommand;
 use EuBourne\LaravelPlugins\Console\PluginListCommand;
 use EuBourne\LaravelPlugins\Contracts\PluginManager as PluginManagerContract;
 use Illuminate\Foundation\Application;
@@ -15,6 +16,7 @@ class PluginServiceProvider extends BaseServiceProvider
         PluginCacheCommand::class,
         PluginClearCommand::class,
         PluginCommand::class,
+        PluginInstallCommand::class,
         PluginListCommand::class,
     ];
 
