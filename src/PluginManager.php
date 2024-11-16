@@ -217,24 +217,4 @@ class PluginManager implements PluginManagerContract
 
         return false;
     }
-
-    /**
-     * Get global plugin route definition rules
-     *
-     * @return array
-     */
-    public function getRouting(): array
-    {
-        return Arr::get($this->config, 'routes', []);
-    }
-
-    /**
-     * Get global plugin broadcasting definition rules
-     *
-     * @return array
-     */
-    public function getBroadcasting(): array
-    {
-        return Arr::get($this->config, 'channels', []);
-    }
 }

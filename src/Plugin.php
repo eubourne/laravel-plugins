@@ -52,12 +52,6 @@ class Plugin
      */
     protected string $defaultServiceProviderName = 'Providers\\ServiceProvider';
 
-    public function __construct(
-        protected array $config = []
-    )
-    {
-    }
-
     public function getKey(): string
     {
         if (isset($this->key) && $this->key) {
@@ -73,7 +67,12 @@ class Plugin
 
     public function getGroup(): ?string
     {
-        return Arr::get($this->config, 'group');
+        if (isset($this->group) && $this->group) {
+            return $this->group;
+        }
+
+        $pieces = explode('\\', get_called_class());
+        return strtolower(array_shift($pieces));
     }
 
     public function getNamespace(): string
@@ -137,10 +136,11 @@ class Plugin
      */
     protected function getRouting(): Collection
     {
-        $routes = Arr::get($this->config, 'routes');
+        $routing = config('plugins.groups.' . $this->getGroup() . '.routes')
+            ?? config('plugins.routes');
 
-        return collect(is_array($routes) && count($routes)
-            ? $routes
+        return collect(is_array($routing) && count($routing)
+            ? $routing
             : $this->routing);
     }
 
@@ -180,7 +180,8 @@ class Plugin
      */
     protected function getBroadcasting(): Collection
     {
-        $channels = Arr::get($this->config, 'channels');
+        $channels = config('plugins.groups.' . $this->getGroup() . '.channels')
+            ?? config('plugins.channels');
 
         return collect(is_array($channels) && count($channels)
             ? $channels

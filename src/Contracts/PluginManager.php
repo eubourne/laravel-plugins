@@ -33,20 +33,6 @@ interface PluginManager
     public function registerTranslations(): self;
 
     /**
-     * Get global plugin routing configuration
-     *
-     * @return array
-     */
-    public function getRouting(): array;
-
-    /**
-     * Get global plugin broadcasting configuration
-     *
-     * @return array
-     */
-    public function getBroadcasting(): array;
-
-    /**
      * Returns a list of discovered plugins with all the metadata
      *
      * @return array

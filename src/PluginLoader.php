@@ -27,7 +27,7 @@ class PluginLoader implements PluginLoaderContract
     {
         $path = $this->getScanPath();
 
-        $files = collect();
+        $plugins = collect();
 
         if (is_dir($path)) {
             $iterator = Finder::create()
@@ -42,16 +42,16 @@ class PluginLoader implements PluginLoaderContract
                     /**
                      * @var Plugin $plugin
                      */
-                    $plugin = new $className($this->getPluginConfig());
+                    $plugin = new $className();
 
                     if ($plugin instanceof Plugin) {
-                        $files->push($plugin->toArray());
+                        $plugins->push($plugin->toArray());
                     }
                 }
             }
         }
 
-        return $files;
+        return $plugins;
     }
 
     /**
@@ -64,6 +64,17 @@ class PluginLoader implements PluginLoaderContract
         $path = $this->config['path'] ?? null;
 
         return $path ? base_path($path) : null;
+    }
+
+    /**
+     * Returns plugin descriptor suffix
+     *
+     * @return string
+     */
+    protected function getSuffix(): string
+    {
+        return config('plugins.groups.' . $this->group . '.suffix')
+            ?? config('plugins.suffix', 'Module');
     }
 
     /**
@@ -85,56 +96,5 @@ class PluginLoader implements PluginLoaderContract
         }
 
         return $namespace ? $namespace . '\\' . $class : $class;
-    }
-
-    /**
-     * Get configuration for a plugin instance
-     *
-     * @return array
-     */
-    protected function getPluginConfig(): array
-    {
-        return [
-            'group' => $this->group,
-            'routes' => $this->getRouting(),
-        ];
-    }
-
-    /**
-     * Get routing configuration specific to a plugin group
-     *
-     * @return array
-     */
-    public function getRouting(): array
-    {
-        /**
-         * @var PluginManagerContract $manager
-         */
-        $manager = app('plugin.manager');
-        $globalRoutes = $manager->getRouting();
-
-        return array_merge_recursive(
-            $globalRoutes,
-            Arr::get($this->config, 'routes') ?? []
-        );
-    }
-
-    /**
-     * Get broadcasting configuration specific to a plugin group
-     *
-     * @return array
-     */
-    public function getBroadcasting(): array
-    {
-        /**
-         * @var PluginManagerContract $manager
-         */
-        $manager = app('plugin.manager');
-        $globalRoutes = $manager->getBroadcasting();
-
-        return array_merge_recursive(
-            $globalRoutes,
-            Arr::get($this->config, 'channels') ?? []
-        );
     }
 }
