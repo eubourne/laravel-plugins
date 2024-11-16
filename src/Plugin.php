@@ -24,19 +24,14 @@ class Plugin
      *
      * @var array|array[]
      */
-    protected array $routing = [
-        'api' => ['filename' => 'api.php'],
-        'web' => ['filename' => 'web.php'],
-    ];
+    protected array $routing;
 
     /**
      * Default broadcasting configuration
      *
      * @var array|string[]
      */
-    protected array $channels = [
-        'channels.php'
-    ];
+    protected array $channels;
 
     /**
      * List of service providers to register
@@ -136,12 +131,19 @@ class Plugin
      */
     protected function getRouting(): Collection
     {
-        $routing = config('plugins.groups.' . $this->getGroup() . '.routes')
-            ?? config('plugins.routes');
+        if (isset($this->routing) && count($this->routing)) {
+            $routing = $this->routing;
+        } else {
+            $routing = config('plugins.groups.' . $this->getGroup() . '.routes')
+                ?? config('plugins.routes');
+        }
 
         return collect(is_array($routing) && count($routing)
             ? $routing
-            : $this->routing);
+            : [
+                'api' => ['filename' => 'api.php'],
+                'web' => ['filename' => 'web.php'],
+            ]);
     }
 
     /**
@@ -180,12 +182,17 @@ class Plugin
      */
     protected function getBroadcasting(): Collection
     {
-        $channels = config('plugins.groups.' . $this->getGroup() . '.channels')
-            ?? config('plugins.channels');
+        if (isset($this->channels) && count($this->channels)) {
+            $channels = $this->channels;
+        } else {
+            $channels = config('plugins.groups.' . $this->getGroup() . '.channels')
+                ?? config('plugins.channels');
+        }
 
         return collect(is_array($channels) && count($channels)
             ? $channels
-            : $this->channels);
+            : ['channels.php']
+        );
     }
 
     /**

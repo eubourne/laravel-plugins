@@ -2,6 +2,8 @@
 
 namespace EuBourne\LaravelPlugins\Contracts;
 
+use EuBourne\LaravelPlugins\Plugin;
+
 interface PluginManager
 {
     /**
@@ -35,9 +37,35 @@ interface PluginManager
     /**
      * Returns a list of discovered plugins with all the metadata
      *
+     * @param string|null $fullKey
      * @return array
      */
-    public function getPluginData(): array;
+    public function getPluginData(string $fullKey = null): array;
+
+    /**
+     * Return a list of discovered plugin keys.
+     *
+     * @return array
+     */
+    public function getKeys(): array;
+
+    /**
+     * Retrieve plugin data field from a specified plugin using dot notation.
+     *
+     * @param string $fullKey
+     * @param string $key
+     * @param mixed|null $default
+     * @return mixed
+     */
+    public function getFromPlugin(string $fullKey, string $key, mixed $default = null): mixed;
+
+    /**
+     * Return instance of a plugin descriptor class
+     *
+     * @param string $fullKey
+     * @return Plugin
+     */
+    public function getPlugin(string $fullKey): Plugin;
 
     /**
      * Return number of registered plugins
