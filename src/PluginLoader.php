@@ -3,8 +3,6 @@
 namespace EuBourne\LaravelPlugins;
 
 use EuBourne\LaravelPlugins\Contracts\PluginLoader as PluginLoaderContract;
-use EuBourne\LaravelPlugins\Contracts\PluginManager as PluginManagerContract;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -32,7 +30,8 @@ class PluginLoader implements PluginLoaderContract
         if (is_dir($path)) {
             $iterator = Finder::create()
                 ->files()
-                ->name('*Module.php')
+                ->name('*' . $this->getSuffix() . '.php')
+                ->sortByName()
                 ->in($path);
 
             foreach ($iterator as $file) {

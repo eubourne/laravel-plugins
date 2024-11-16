@@ -16,6 +16,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Descriptor suffix
+    |--------------------------------------------------------------------------
+    |
+    | Configure global plugin descriptor suffix. By default a plugin descriptor
+    | class should have 'Module' suffix: CatalogModule.php, BlogModule.php,
+    | etc.
+    |
+    */
+
+    'suffix' => 'Module',
+
+    /*
+    |--------------------------------------------------------------------------
     | Plugin routes
     |--------------------------------------------------------------------------
     |
@@ -69,6 +82,7 @@ return [
             'path' => 'modules',
             // 'routes' => []
             // 'channels' => []
+            // 'suffix' => ''
         ]
     ]
 ];
