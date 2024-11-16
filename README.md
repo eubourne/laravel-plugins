@@ -17,6 +17,7 @@ other resources.
         - [_Routes_](#routes)
         - [_Multiple Module Groups_](#multiple-module-groups)
     - [Example Module Definition](#example-module-definition)
+- [Accessing Plugin Data](#accessing-plugin-data)
 - [Optimization](#optimization)
 - [License](#license)
 - [Contributing](#contributing)
@@ -41,7 +42,7 @@ so you don't have to manually register its service provider.
 
 Run the following artisan command to publish configuration file:
 ```bash
-php artisan vendor:publish --provider="EuBourne\LaravelPlugins\PluginServiceProvider" --tag=config
+php artisan plugin:install
 ```
 It will create `config/plugins.php` file with reasonable defaults.
 
@@ -92,6 +93,12 @@ modules/
     ├── Lang/
     └── CatalogModule.php
 ```
+
+You can customize the default suffix for plugin descriptor files to better suit your project needs. For example,
+instead of using `<ModuleName>Module.php`, you can switch to `<ModuleName>Widget.php`. To achieve this, update
+the `suffix` parameter in the `config/plugins.php` file. Additionally, if you have multiple groups, you can specify
+a unique suffix for each group using the `groups.*.suffix` parameter. This flexibility allows you to tailor the naming
+conventions to your application's structure.
 
 ### Registering Module Resources
 
@@ -223,6 +230,46 @@ class ServiceProvider extends BaseServiceProvider
         // Load resources
     }
 }
+```
+
+## Accessing Plugin Data
+You can access plugin data using the `PluginManager`, which can be retrieved from the service container:
+
+```php
+/**
+ * Retrieve the PluginManager instance.
+ *
+ * @var \EuBourne\LaravelPlugins\PluginManager $manager
+ */
+$manager = app('plugin.manager');
+
+/**
+ * Get a list of all registered plugin keys.
+ *
+ * @var array $keys
+ */
+$keys = $manager->getKeys();
+
+/**
+ * Retrieve data for a specific plugin as an array.
+ *
+ * @var array $blogPluginData
+ */ 
+$blogPluginData = $manager->getPluginData('modules.blog');
+
+/**
+ * Retrieve a specific field value from a plugin's data.
+ *
+ * @var mixed $value
+ */
+$value = $manager->getFromPlugin('modules.blog', 'className');
+
+/**
+ * Retrieve the Plugin instance for a specific plugin.
+ *
+ * @var \EuBourne\LaravelPlugins\Plugin $plugin
+ */
+$plugin = $manager->getPlugin('modules.blog');
 ```
 
 ## Optimization
