@@ -4,6 +4,7 @@ namespace EuBourne\LaravelPlugins;
 
 use EuBourne\LaravelPlugins\Contracts\PluginLoader as PluginLoaderContract;
 use Illuminate\Support\Collection;
+use ReflectionClass;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -38,13 +39,20 @@ class PluginLoader implements PluginLoaderContract
                 $className = $this->classFromFile($file);
 
                 if (class_exists($className)) {
-                    /**
-                     * @var Plugin $plugin
-                     */
-                    $plugin = new $className();
+                    $reflection = new ReflectionClass($className);
 
-                    if ($plugin instanceof Plugin) {
-                        $plugins->push($plugin->toArray());
+                    if (!$reflection->isAbstract() &&  $reflection->isSubclassOf(Plugin::class)) {
+                        try {
+                            /**
+                             * $className extends or implements Plugin
+                             *
+                             * @var Plugin $plugin
+                             */
+                            $plugin = $reflection->newInstance();
+                            $plugins->push($plugin->toArray());
+                        } catch (\ReflectionException $e) {
+                            logger()->error('Failed to instantiate plugin "' . $className . '": ' . $e->getMessage());
+                        }
                     }
                 }
             }
