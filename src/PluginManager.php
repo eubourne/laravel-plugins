@@ -63,7 +63,7 @@ class PluginManager implements PluginManagerContract
                 $path = Arr::get($routeConfig, 'path');
 
                 if ($path && file_exists($path)) {
-                    Route::middleware(Arr::get($routeConfig, 'middleware'))
+                    Route::middleware(Arr::get($routeConfig, 'middleware') ?: [])
                         ->group($path);
                 }
             });

@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.2
+
+### Fixed
+* Prevented `Class "" does not exist` error by ensuring `Route::middleware()` receives an empty array when middleware is null.
+
 ## v1.1.1
 
 ### Fixed
