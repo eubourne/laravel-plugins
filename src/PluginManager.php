@@ -7,10 +7,12 @@ use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as AppEventServiceProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Psr\SimpleCache\InvalidArgumentException;
 
 class PluginManager implements PluginManagerContract
@@ -41,6 +43,34 @@ class PluginManager implements PluginManagerContract
             ->each(function (string $className) {
                 if (class_exists($className)) {
                     app()->register($className);
+                }
+            });
+
+        return $this;
+    }
+
+    public function registerListeners(): self
+    {
+        collect($this->getPluginData())
+            ->pluck('listeners')
+            ->each(function (array|null $listeners) {
+                if (is_array($listeners) && count($listeners)) {
+                    // The addDiscoveryPaths method adds the paths to an internal protected property.
+                    // By default, this property is null and when we are trying to add paths to it,
+                    // the underlying array_merge throws an error because its argument #1 is null.
+                    // Laravel does not provide a way to get the value of that property from outside
+                    // the EventServiceProvider class, so we have to use a hack to add paths without
+                    // knowing if the internal array was initialized.
+
+                    try {
+                        AppEventServiceProvider::addEventDiscoveryPaths($listeners);
+                    } catch (\TypeError $e) {
+                        if (Str::contains($e->getMessage(), 'array_merge():')) {
+                            AppEventServiceProvider::setEventDiscoveryPaths($listeners);
+                        } else {
+                            throw $e;
+                        }
+                    }
                 }
             });
 

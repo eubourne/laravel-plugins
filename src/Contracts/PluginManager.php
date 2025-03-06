@@ -14,6 +14,13 @@ interface PluginManager
     public function registerProviders(): self;
 
     /**
+     * Register plugin event listener paths
+     *
+     * @return self
+     */
+    public function registerListeners(): self;
+
+    /**
      * Register plugin routes
      *
      * @return self

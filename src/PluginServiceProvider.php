@@ -41,9 +41,16 @@ class PluginServiceProvider extends BaseServiceProvider
         );
     }
 
-    public function boot(PluginManagerContract $pluginManager): void
+    public function boot(): void
     {
-        $pluginManager->registerProviders();
+        parent::boot();
+
+        /** @var PluginManagerContract $pluginManager */
+        $pluginManager = $this->app->make(PluginManagerContract::class);
+
+        $pluginManager
+            ->registerProviders()
+            ->registerListeners();
 
         $this->optimizeCommands();
 

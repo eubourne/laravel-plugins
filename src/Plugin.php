@@ -218,6 +218,20 @@ class Plugin
     }
 
     /**
+     * Get a list of plugin listener paths
+     *
+     * @return string[]|null
+     */
+    public function getListeners(): array|null
+    {
+        $default = $this->getPath('Listeners');
+
+        return property_exists($this, 'listeners')
+            ? $this->{'listeners'}
+            : (file_exists($default) ? [$default] : null);
+    }
+
+    /**
      * Get path to a directory with plugin translation files
      *
      * @return string|null
@@ -259,6 +273,7 @@ class Plugin
             'providers' => $this->getProviders(),
             'routes' => $this->getRouteFiles(),
             'channels' => $this->getChannelFiles(),
+            'listeners' => $this->getListeners(),
             'translations' => $this->getTranslations(),
         ];
     }
