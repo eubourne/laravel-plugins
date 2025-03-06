@@ -166,6 +166,29 @@ To configure additional route file names:
   ]
   ```
 
+#### Event Discovery
+The package automatically discovers events and listeners from the `Listeners` directory in each module. It works the
+same way as original Laravel event discovery, where the package scans the `Listeners` directory for event listeners
+and registers them.
+
+If you need to customize the event discovery paths, you can do so by overriding the `$listeners` property of the module:
+```php
+class Blog extends Plugin
+{
+    protected array $listeners = [
+        __DIR__ . '/MyListeners'
+    ];
+}
+```
+
+To disable event discovery for a specific module, set the `$listeners` property to an empty array:
+```php
+class Blog extends Plugin
+{
+    protected array $listeners = [];
+}
+```
+
 #### Multiple Module Groups
 You can define multiple module groups in the `groups` section of the configuration file. Each group may have its own
 root directory and unique route configurations.
