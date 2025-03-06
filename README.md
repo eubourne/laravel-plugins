@@ -15,7 +15,9 @@ other resources.
     - [Registering Module Resources](#registering-module-resources)
         - [_Service Providers_](#service-providers)
         - [_Routes_](#routes)
+        - [_Event Discovery_](#event-discovery)
         - [_Multiple Module Groups_](#multiple-module-groups)
+    - [Schedule Tasks](#schedule-tasks)
     - [Example Module Definition](#example-module-definition)
 - [Accessing Plugin Data](#accessing-plugin-data)
 - [Optimization](#optimization)
@@ -221,6 +223,25 @@ In this example:
 - **`modules`** is the main group for primary modules.
 - **`widgets`** is a secondary group with its own routing configuration. Routes like `api_v1.php` and `api_v2.php` are
 loaded only within widgets.
+
+### Schedule Tasks
+Often modules require scheduled tasks to run at specific intervals. To define scheduled tasks for a module, you can
+use the `schedule` method in the module service provider:
+
+```php
+namespace Modules\Blog\Providers;
+
+use Illuminate\Console\Scheduling\Schedule;
+use EuBourne\LaravelPlugins\BaseServiceProvider;
+
+class ServiceProvider extends BaseServiceProvider
+{
+    public function (Schedule $schedule): void
+    {
+        $schedule->command('blog:clear')->daily();
+    }
+}
+```
 
 ### Example Module Definition
 

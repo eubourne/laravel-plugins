@@ -2,6 +2,8 @@
 
 namespace EuBourne\LaravelPlugins;
 
+use Illuminate\Console\Application as Artisan;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -47,6 +49,7 @@ abstract class BaseServiceProvider extends ServiceProvider
     {
         $this->registerProviders();
         $this->registerCommands();
+        $this->runSchedule();
     }
 
     /**
@@ -76,6 +79,18 @@ abstract class BaseServiceProvider extends ServiceProvider
     {
         foreach ($this->subscribe as $subscriber) {
             Event::subscribe($subscriber);
+        }
+    }
+
+    /**
+     * Handle the schedule
+     *
+     * @return void
+     */
+    protected function runSchedule(): void
+    {
+        if (method_exists($this, 'schedule')) {
+            Artisan::starting(fn() => $this->{'schedule'}($this->app->make(Schedule::class)));
         }
     }
 }
