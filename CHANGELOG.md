@@ -1,8 +1,15 @@
 # Changelog
 
-## v1.2.0
+## v1.3.0
 
 * **Added Laravel 12 Support**
+
+## v1.2.0
+
+## Added
+* Event discovery.
+* Event subscribers array property in service provider.
+* Schedule method in service provider.
 
 ## v1.1.2
 
