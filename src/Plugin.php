@@ -105,7 +105,7 @@ class Plugin
                             ->sortByName();
 
                         // Format routing data output
-                        return collect(iterator_to_array($iterator))
+                        return (new Collection(iterator_to_array($iterator)))
                             ->map(fn(SplFileInfo $file) => array_merge(
                                 Arr::except($routingGroup, ['filename']),
                                 ['path' => $file->getPathname()]
@@ -138,7 +138,7 @@ class Plugin
                 ?? config('plugins.routes');
         }
 
-        return collect(is_array($routing) && count($routing)
+        return new Collection(is_array($routing) && count($routing)
             ? $routing
             : [
                 'api' => ['filename' => 'api.php'],
@@ -166,7 +166,7 @@ class Plugin
                 ->sortByName();
 
             // Format output
-            return collect(iterator_to_array($iterator))
+            return (new Collection(iterator_to_array($iterator)))
                 ->map(fn(SplFileInfo $file) => $file->getPathname())
                 ->values()
                 ->all();
@@ -189,7 +189,7 @@ class Plugin
                 ?? config('plugins.channels');
         }
 
-        return collect(is_array($channels) && count($channels)
+        return new Collection(is_array($channels) && count($channels)
             ? $channels
             : ['channels.php']
         );
