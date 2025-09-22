@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.3.1
+
+### Fixed
+* Resolved an issue with initialization of collections with `collect()` function.
+
 ## v1.3.0
 
 * **Added Laravel 12 Support**
